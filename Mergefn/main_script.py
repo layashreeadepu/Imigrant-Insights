@@ -2,7 +2,7 @@
 import sys
 import os
 #Merger function file path
-sys.path.append(os.path.abspath("C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/Mergefn/immigration"))
+sys.path.append(os.path.abspath("C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/Mergefn"))
 from immigration.merger import load_and_clean_data
 
 #File path of xls file for datafile from year 2003 - 2023
