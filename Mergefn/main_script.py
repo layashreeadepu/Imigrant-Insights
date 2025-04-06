@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath("C:/Users/layas/OneDrive/Desktop/Layashree docum
 from immigration.merger import load_and_clean_data
 
 #File path of xls file for datafile from year 2003 - 2023
-input_folder = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/"
+input_folder = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/input dataset"
 final_df = load_and_clean_data(input_folder)
 
 #Print and export merged file
