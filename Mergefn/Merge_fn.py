@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import glob
 
-ffpt = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS"
+ffpt = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/input dataset"
 opf = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/Mergefn/merged_output.xlsx"
 
 excel_fs = glob.glob(os.path.join(ffpt, "*.xls"))
