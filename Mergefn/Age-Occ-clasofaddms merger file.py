@@ -5,7 +5,7 @@ import numpy as np
 
 # Define file paths
 input_folder_path = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/input dataset/all countries"
-output_file_path = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/Mergefn/occupation_age_admission_merged_updates.xlsx"
+output_file_path = "C:/Users/layas/OneDrive/Desktop/Layashree documents/NEU Cources/Intro to Programming in DS/Mergefn/all_countries.xlsx"
 
 # Get all Excel files in the input directory
 excel_files = glob.glob(os.path.join(input_folder_path, "*.xls"))
@@ -38,7 +38,7 @@ for file_path in excel_files:
         df = pd.read_excel(file_path, skiprows=5, engine="xlrd")
         
         # Find and remove footer notes
-        footer_indicators = ["Represents zero", "Data withheld", "Note:"]
+        footer_indicators = ["Represents zero", "Data withheld", "Note:", "- Represents"]
         footer_idx = None
         
         for indicator in footer_indicators:
@@ -125,10 +125,41 @@ else:
         except:
             admission_idx = None
             admission_start = None
+            
+        # Also identify the sections we want to explicitly exclude
+        try:
+            marital_rows = subset[
+                subset["Characteristic"].str.contains("Marital", case=False, na=False)
+            ].index
+            if len(marital_rows) > 0:
+                marital_idx = marital_rows[0]
+                marital_start = marital_idx + 1
+            else:
+                marital_idx = None
+                marital_start = None
+        except:
+            marital_idx = None
+            marital_start = None
+            
+        try:
+            states_rows = subset[
+                subset["Characteristic"].str.contains("states of permanent residence", case=False, na=False) |
+                subset["Characteristic"].str.contains("Leading states", case=False, na=False) |
+                subset["Characteristic"].str.contains("Top 20 states", case=False, na=False)
+            ].index
+            if len(states_rows) > 0:
+                states_idx = states_rows[0]
+                states_start = states_idx + 1
+            else:
+                states_idx = None
+                states_start = None
+        except:
+            states_idx = None
+            states_start = None
         
         # Find the next section after each section to determine the end
         all_section_indices = sorted(
-            [i for i in [age_idx, occupation_idx, admission_idx] if i is not None])
+            [i for i in [age_idx, occupation_idx, admission_idx, marital_idx, states_idx] if i is not None])
         
         # Assign Age group
         if age_idx is not None:
@@ -151,8 +182,22 @@ else:
             merged_df.loc[admission_start:next_idx-1, "Group"] = "Broad Class of Admission"
             merged_df.loc[admission_start:next_idx-1, "Subgroup"] = merged_df.loc[admission_start:next_idx-1, "Characteristic"]
     
-    # Filter the dataframe to keep only the sections we want
+    # Explicitly filter to keep only the sections we want
     filtered_df = merged_df[merged_df["Group"].isin(["Age", "Occupation", "Broad Class of Admission"])]
+    
+    # Remove "New arrivals" and "Adjustments of status" rows
+    filtered_df = filtered_df[
+        ~filtered_df["Subgroup"].str.contains("New arrivals", case=False, na=False) & 
+        ~filtered_df["Subgroup"].str.contains("Adjustments of status", case=False, na=False)
+    ]
+    
+    # Also filter out the "Total" rows that are at the start of the file (usually row 6)
+    filtered_df = filtered_df[
+        ~(filtered_df["Subgroup"] == "Total")
+    ]
+    
+    # Print info about filtered rows
+    print(f"Filtered dataframe has {len(filtered_df)} rows after removing unwanted sections and rows")
     
     # Drop rows with missing or invalid data
     filtered_df = filtered_df.dropna(subset=["Total", "Male", "Female"], how="all")
@@ -161,6 +206,7 @@ else:
     for col in ["Total", "Male", "Female", "Unknown"]:
         if col in filtered_df.columns:
             filtered_df[col] = filtered_df[col].replace("-", 0)
+            filtered_df[col] = filtered_df[col].replace("D", np.nan)  # Replace "D" (Data withheld) with NaN
             filtered_df[col] = pd.to_numeric(filtered_df[col], errors="coerce")
     
     # Drop the original 'Characteristic' column as we now have Group and Subgroup
