@@ -112,6 +112,6 @@ To forecast future occupation trends, this project applies:
 ---
 
 ## 📌 **Connect with Us**
-- **Authors:** Layashree Adepu, Sharanya Chikke Gowda
+- **Authors:** Layashree Adepu
 - **Course:** DS5200 - Intro to Programming for DS, Spring 2025
 - **Institution:** Northeastern University, Khoury College of Computer and Information Sciences
