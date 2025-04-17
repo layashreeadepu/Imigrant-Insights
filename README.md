@@ -1,7 +1,7 @@
-# 🎯 **Predicting Future Occupation Trends Using Immigration Data from Asia (2005-2022)**
+# 🎯 **Predicting Future Occupation Trends Using Immigration Data (2005-2022)**
 
 ## 🚀 **Project Overview**
-This project develops a Python package that analyzes 18 years of immigration data for lawful permanent residents from Asian countries (2005-2022).  
+This project develops a Python package that analyzes 18 years of immigration data for lawful permanent residents (2005-2022).  
 I leverage advanced time series forecasting techniques to identify occupation trends and predict future labor market demands, providing actionable insights for workforce planning and industry development.  
 
 ---
